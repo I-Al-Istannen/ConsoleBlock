@@ -1,6 +1,5 @@
 package me.ialistannen.consoleblock;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public final class ConsoleBlock extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        new File(getDataFolder(), "config.yml").delete();
+//        new File(getDataFolder(), "config.yml").delete();
 
         saveDefaultConfig();
         

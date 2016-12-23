@@ -1,7 +1,9 @@
 package me.ialistannen.consoleblock.filter.types;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.BiFunction;
 
@@ -21,6 +23,7 @@ public class PartialMatchFilter extends AbstractMessageFilter {
     private static final String TYPE_NAME = "PartialMatch";
 
     private ContainMode mode;
+    private List<String> otherStrings;
 
     /**
      * An empty filter
@@ -35,12 +38,14 @@ public class PartialMatchFilter extends AbstractMessageFilter {
      * @param pattern The pattern to use
      * @param caseSensitive Whether this filter is case sensitive
      * @param mode The {@link ContainMode} to use
+     * @param other The other strings that need to occur in the message
      */
     public PartialMatchFilter(Collection<Level> levels, String name, String pattern, boolean caseSensitive,
-                              ContainMode mode) {
+                              ContainMode mode, List<String> other) {
         super(levels, TYPE_NAME, name, pattern, caseSensitive);
 
         this.mode = mode;
+        this.otherStrings = new ArrayList<>(other);
     }
 
     /**
@@ -51,12 +56,28 @@ public class PartialMatchFilter extends AbstractMessageFilter {
      */
     @Override
     protected FilterResult doFilter(String message, Level level) {
+        if (getResult(message, getPattern()) == FilterResult.PASS) {
+            return FilterResult.PASS;
+        }
+
+        if (mode == ContainMode.CONTAINS) {
+            for (String otherString : otherStrings) {
+                if (getResult(message, otherString) == FilterResult.PASS) {
+                    return FilterResult.PASS;
+                }
+            }
+        }
+
+        return FilterResult.FILTER;
+    }
+
+    private FilterResult getResult(String message, String pattern) {
         if (!isCaseSensitive()) {
-            String modifiedPattern = getPattern().toLowerCase();
+            String modifiedPattern = pattern.toLowerCase();
             String modifiedMessage = message.toLowerCase();
             return getFilterResult(mode.test(modifiedMessage, modifiedPattern));
         }
-        return getFilterResult(mode.test(message, getPattern()));
+        return getFilterResult(mode.test(message, pattern));
     }
 
     /**
@@ -73,7 +94,13 @@ public class PartialMatchFilter extends AbstractMessageFilter {
         ContainMode mode = ContainMode.valueOf(
                 ConfigUtils.ensureAndGetString(section, "contain_mode")
         );
-        return new PartialMatchFilter(levels, name, pattern, caseSensitive, mode);
+        List<String> other = new ArrayList<>();
+
+        if (section.isList("more_patterns")) {
+            other.addAll(section.getStringList("more_patterns"));
+        }
+
+        return new PartialMatchFilter(levels, name, pattern, caseSensitive, mode, other);
     }
 
     public enum ContainMode {

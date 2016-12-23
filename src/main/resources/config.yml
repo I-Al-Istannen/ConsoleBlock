@@ -26,6 +26,9 @@ filters:
     filter_type: "PartialMatch"
     name: "Filter 'I Al Istannen' - Better"
     pattern: "I Al Istannen"
+    more_patterns:
+    # "I Al Istannen" must be in the string and "developer" too
+    - "developer"
     case_sensitive: false
     contain_mode: "CONTAINS"
     levels:
@@ -42,6 +45,9 @@ filters:
 #         - At the start
 #       - "ENDS_WITH"
 #         - At the end
+#   - "more_patterns"
+#     - Any other keywords that need to appear. Will be ignored if the mode is not "CONTAINS"
+#     - A string list, like "levels"
 
 # ==== RegEx ====
 #    - "partial_match"
