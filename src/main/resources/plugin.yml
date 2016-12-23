@@ -1,0 +1,10 @@
+name: ConsoleBlock
+version: ${project.version}
+main: me.ialistannen.consoleblock.ConsoleBlock
+authors: [I_Al_Istannen]
+description: Filters console message
+commands:
+  consoleblock:
+    description: "The main command for ConsoleBlock"
+    usage: "/consoleblock <list|reload>"
+    permission: "consoleblock"

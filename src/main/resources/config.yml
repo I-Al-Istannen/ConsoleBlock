@@ -1,0 +1,52 @@
+# All the filters
+filters:
+  # Some unique string. May be whatever you please.
+  one:
+    # The type of the filter.
+    #  - "RegEx"
+    #  - "PartialMatch"
+    #  - "ExactMatch"
+    filter_type: "ExactMatch"
+    # The name of the filter
+    name: "Filter 'I Al Istannen'"
+    # The filter pattern
+    pattern: "I Al Istannen"
+    # Whether it is case sensitive
+    case_sensitive: false
+    # The levels to filter
+    #  - "ALL"
+    #  - "INFO"
+    #  - "WARN"
+    #  - "ERROR"
+    levels:
+      - "INFO"
+      - "WARN"
+      - "ERROR"
+  second:
+    filter_type: "PartialMatch"
+    name: "Filter 'I Al Istannen' - Better"
+    pattern: "I Al Istannen"
+    case_sensitive: false
+    contain_mode: "CONTAINS"
+    levels:
+    - "ALL"
+
+# And then there are some keys unique to the type:
+
+# ==== PartialMatch ====
+#   - "contain_mode"
+#     - Describes where the match might occur
+#       - "CONTAINS"
+#         - Somewhere in the text
+#       - "STARTS_WITH"
+#         - At the start
+#       - "ENDS_WITH"
+#         - At the end
+
+# ==== RegEx ====
+#    - "partial_match"
+#      - Describes whether it must match the pattern or the pattern must only be contained in it
+#        - true
+#          - Enables it
+#        - false
+#          - Disables it
